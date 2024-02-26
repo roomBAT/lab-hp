@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="GENERATOR" content="JustSystems Homepage Builder Version 18.0.14.0 for Windows">
+<meta name="Keywords" content="Bicoordinate stereo, 2D panoramic sound, binaural, cardioid microphone">
+<meta name="Description" content="Bicoordinate stereo">
+<meta name="author" content="ashihara-k">
+<meta name="Robots" content="index,follow">
+<title>Panostereo</title>
+<style>
+body{
+  line-height: 1.28
+}
+
+#header{
+  text-align: right;
+  vertical-align: top;
+  width: 90%;
+  height: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 0px;
+  padding-bottom: 160px;
+  padding-left: 40px;
+  padding-right: 10px;
+  background-image: url(images/fullspheric.png);
+  background-size: contain;
+  background-position: left;
+  background-repeat:no-repeat;
+  font-family: "Berlin Sans FB","MS PGothic","Courier New","Times New Roman","Arial";
+  font-size: 2.2vw;
+  color: #00C0A0;
+}
+
+#caption{
+	text-align: left;
+}
+
+#contents {
+  width: 56%;
+  float: left;
+  margin-left: 4%;
+  margin-right: 4%;
+  padding: 0;
+  font-family: "MS PGothic","sans-serif","Berlin Sans FB","Courier New","Times New Roman","Arial";
+  font-size: large;
+}
+
+#sidebar {
+  position: relative;
+  z-index:1;
+  width: 36%;
+  float: right;	
+  font-family: "MS PGothic","sans-serif","Berlin Sans FB","Courier New","Times New Roman","Arial";
+  font-size: medium;
+  margin: 0;
+  padding: 0;
+}
+
+#sidebar ul{
+  list-style-type : none;
+}
+
+#sidebar li{
+  border-style:solid;
+  border-color:#cf9;
+  background-color:#ffc;
+  padding:4px;
+}
+
+#footer {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  clear: both;
+  font-family: "sans-serif","Berlin Sans FB","MS PGothic","Courier New","Times New Roman","Arial";
+  font-size: medium;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 4%;
+  margin-right: 4%;
+  padding: 0.5em 0;
+}
+</style>
+</head>
+
+<body background="images/y8b.gif">
+<div id="wrapper">
+<!--header-->
+<div id="header">
+<h2>Introduction to<br>
+the Full-Spherical Stereo<br>
+technology</h2>
+<p style="color:#0000aa">3-D panoramic sound can be transmitted<br>
+in the stereo audio format</p>
+</div>
+<!--contents-->
+<div id="contents">
+
+<h2>Introduction</h2>
+<p>In the conventional stereo sound system, only one-dimensional spatial information of sounds 
+along with the left-to-right axis can be transmitted. 
+To transmit two-dimensional or three-dimensional spatial information,
+special audio formats such as 'Dolby surround' and 'Ambisonics' are needed.</p>
+<p>By using the <strong>Full-Spherical Stereo technology</strong>, 3-dimensional spatial sound can be
+saved to and transmitted by the simple stereo audio format.
+Transmitting immersive spatial sounds, therefore, does not need any special data format at all.
+Only in the recording process, a 4-track recording system is required.</p>
+
+<p>In principle, a 4-point measurement is required to capture spatial characteristics of waves 
+in the 3-dimensional space.</p>
+<p>A tetrahedral microphone system consists of 4 omnidirectional microphones (Fig. 1) can be used
+to capture spatial properties of sounds in the 3-dimensional space.</p>
+
+<p>Here, the spatial properties of sounds mean the propagation direction and propagation speed
+  of a wave for each frequency bin at the observation point.
+  For more detail about the propagation direction and propagation speed,
+  see <a href="note.html">Technical note</a>.
+</p>
+
+	<p id="caption">
+	<img src="images/tetra1.jpg" width="384" height="293" border="0"><br>
+	<b>Fig.1 Tetrahedral microphone system<br>
+	<i>Four omnidirectional microphones (Audio Technica, AT9903) are at the vertices of a tetrahedron.
+	Each side of the tetrahedron is 15 mm long.</i></b></p>
+
+<p>In our technology, a 4-track audio signal captured by the system 
+  is converted to a 2-channel audio data stream 
+without losing the 3-dimensional spatial properties of the sounds.</p>
+
+<p>Please wear stereo headphones and check the demonstration by clicking the thumbnail below.
+  <span style="color: #ff0000;">Stereo headphones are necessary</span>.
+  Once an image appears on the screen and you see "Click to start" or "Tap to start" on the screen, 
+  you can start the reproduction by a click or tap on the image.
+  You can pause and resume the playback by clicking (tapping) the image.</p>
+<p>During the reproduction, you can change panning of the full spherical image 
+by moving the mouse pointer 
+to the left or right on the image and you will notice that panning of the sound also changes.
+You can also control tilt (elevation from the horizontal plane) by 
+the vertical motion of the mouse.</p>
+
+<p><a href="fs_stereo/player3d.html?wav=orimoto0.wav&image=orimoto0.mp4&mode=0"><img src="images/orimoto0thumb.jpg" width="100" height="100" alt="orimoto0" /><br>
+  Demo with a file "orimoto0.wav"<br>
+</a>(Pan and tilt are available)</p>
+
+<p><blockquote><i><sapn style="color:#0000aa">Playback of full spherical images on this site
+is implemented thanks to <a href="https://threejs.org/">Three.js technology</a>.
+</sapn></i></blockquote></p>
+
+<p>In the clip below, you can control 'roll' (rotation around the front-to-rear axis)
+by placing the mouse pointer at the corners of the image.</p>
+
+<p><a href="fs_stereo/player3d.html?wav=fss00.wav&image=fss00.mp4&mode=1"><img src="images/thumb.jpg" width="100" height="100" alt="PanoSterec_icon" /><br>
+	Demo with a file "fss00.wav"<br>
+</a>(Pan and roll are available)</p>
+
+<p>The sound files used in the clips above are "orimoto0.wav" and "fss00.wav." 
+  As the file extension indicates, they are stereo WAV files.
+  If only one-dimensional spatial property is conveyed in a WAV file,
+  neither of yaw (pan), pitch (tilt) and roll of the sound can be changed.</p>
+<p>Although there are only 2 channels in a stereo WAV file, 
+  in the Full-Spherical Stereo technology, 
+  a stereo WAV file can contain the full spherical (3-dimensional) spatial information of sounds.
+</p>
+
+<p>Some other clips are available.</p>
+
+<table><tbody><tr>
+<td style="text-align : center;" align="center">
+<a href="fs_stereo/player3d.html?wav=lost_species.wav&image=lost_species.mp4&mode=0"><img src="images/lost_species_thumb.jpg" width="100" height="100" alt="lost_species" /><br>
+	Demo with a file "lost_species.wav"</a></td>
+<td style="text-align : center;" align="center">
+<a href="fs_stereo/player3d.html?wav=orimoto1.wav&image=orimoto1.mp4&mode=0"><img src="images/orimoto1thumb.jpg" width="100" height="100" alt="orimoto1" /><br>
+  Demo with a file "orimoto1.wav"</a></td>
+<td style="text-align : center;" align="center">
+<a href="fs_stereo/player3d.html?wav=haunted_sniper.wav&image=haunted_sniper.mp4&mode=0"><img src="images/haunted_sniper_thumb.jpg" width="100" height="100" alt="haunted_sniper" /><br>
+  Demo with a file "haunted_sniper.wav"</a></td></tr></tbody></table>
+
+<h2>Features</h2>
+<p>Besides the interactive control of yaw, pitch and roll,
+  this technology offers several unique features.</p>
+
+<h3>[Panoramic beamformer]</h3>
+<p>Since the full spherical spatial characteristics of sounds are contained 
+in the stereo audio data stream, a directional beam can be formed programatically
+during the playback by using the spatial information.</p>
+
+<p>In the next demo clip, 6 speakers who surround the microphone system 
+  are reading 6 different texts at the same time as can be seen in Fig. 2.</p>
+<p id="caption">
+	<img src="images/recit6.jpg" width="360" height="360" border="0"><br>
+	<b>Fig.2 Six readers and the microphone system<br>
+	<i>Three males and 3 females are reading 6 different texts in an anechoic room.
+    There is a tetrahedral microphone system in the center of the room.
+  </i></b></p>
+
+  <p>In this demonstration, you can toggle the beam patterns 
+    by using the 'BEAMFORMER' button on the bottom of the demo screen.
+    There are 4 beam patterns that are 'OMNIDIRECTIONAL,' 'CARDIOID,' 'NARROW,'
+    and 'SUPER NARROW.'
+    Since direction of the beam is linked to the panning direction,
+    you can direct the beam to any direction you want.
+  </p>
+    <p>Open the clip by clicking the thumbnail below.</p>
+
+  <a href="fs_stereo/player3d.html?wav=recit6.wav&image=recit6.mp4&mode=0"><img src="images/recit_thumb.jpg" width="100" height="100" alt="recit6" /><br>
+    Demo with a file "recit6.wav"</a><br>
+    (Thanks to Tokyo City University students)
+  
+  <p>As you may notice, a directional beam can be formed from a stereo audio data stream
+    and directed to any desired direction.
+    This feature is called by us 'Panoramic beamformer.'
+  </p>
+
+<h3>[Underwater panoramic sound]</h3>
+<p>As described, full spherical spatial sounds can be captured by a 4-point recording.
+  If these microphones used in the recording are replaced by hydrophones, 
+  panoramic sounds can be recorded even in the water, too.</p>
+<p>Since the sound speed is much faster in water than in air, it has to be adjusted programmatically. 
+  Other than that, panoramic sound in water can be recorded and reproduced by almost the same procedure 
+  as that in air.
+Figure 3 shows the tetrahiedral hydrophone system used in our study.</p>
+ 
+	<p id="caption">
+    <img src="images/tetra_hydro.jpg" width="278" height="246" border="0"><br>
+    <b>Fig.3 Tetrahedral hydrophone system<br>
+    <i>An underwater panoramic sound recording system consists of 4 omnidirectional hydrophones
+      (AQUARIAN AUDIO H2a-XLR). Each side of the tetrahedron is 50 mm long.
+    </i></b></p>
+  
+  <p>Sounds in the following demo clips were recorded in the water 
+    by using the tetrahedral hydrophone system.
+    In these clips, the full spherical spatial sounds are reconstructed
+  also from the data stream stored in stereo WAV files.
+  </p>
+  
+  <table><tbody><tr>
+    <td style="text-align : center;" align="center">
+        <a href="fs_stereo/player3d.html?wav=turtle01.wav&image=turtle01.mp4&dist=11&mode=0">
+      <img src="images/turtle_thumb.jpg" width="100" height="100" alt="turtle01" /><br>
+      Demo with a file<br>
+      "turtle01.wav"</a></td>
+      <td style="text-align : center;" align="center">
+        <a href="fs_stereo/player3d.html?wav=squal.wav&image=squal.mp4&dist=11&mode=0">
+      <img src="images/squal_thumb.jpg" width="100" height="100" alt="squal" /><br>
+      Demo with a file<br>
+      "squal.wav"</a></td></tr></tbody></table>
+  
+  <h3>[Backward compatibility]</h3>
+  <p>To reproduce the full spherical spatial sound, a custom app or program is needed.
+    On this site, for instance, a program in JavaScript is used.
+    Since stereo WAV files in the Full-Spherical Stereo are backward compatible,
+    even if the custom app is not available, audio data stream can be played 
+    as the conventional one-dimensional stereo sound.
+  </p>
+    
+  </div>
+  <!--sidebar-->
+  <div id="sidebar">
+	<div align="right" style="text-align : right;"><a href="FS_stereo_j.html"><img src="images/japanese.jpg" width="48" height="48" border="0" alt="Japanese">
+	<img src="images/logo1.gif" width="96" height="32" border="0" alt="Japanese ">
+	</a>(Under construction)</div>
+    <h3>Navigation</h3>
+    <ul>
+      	<li><a href="https://www1.doshisha.ac.jp/~bioinfo/index.html">
+          Neuroethology and Bioengineering Lab.(in Japanese)</a>
+        <li><a href="DualMic.html">Bicoordinate stereo</a></li>
+      	<li><a href="note.html">Technical note</a></li>
+      	<li><a href="mailto:ashihara-k@i.softbank.jp">Contact us</a></li>
+	</ul>
+  </div>
+
+<div id="footer">
+<hr>
+<img src="images/panostereo_mini.png" width="140" height="72">
+<p style="text-align : right;" align="right">Copyright&copy; 2024 Doshisha Univ.</p>
+</div>
+</div>
+</body>

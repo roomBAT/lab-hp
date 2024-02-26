@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="Keywords" content="2D panoramic stereo, 360 degrees, recording">
+<meta name="author" content="ashihara-k">
+<meta name="robots" content="index,follow">
+<title>2D panoramic stereo recorder</title></head>
+
+<body bgcolor="#fdfdc8" style="padding-left:2%; padding-right:2%">
+<form name="form">
+<p style="font-size:20px" align="center">Recording device:
+<select id="device" style="font-size:20px;text-align: right">
+<option value="0">ZOOM XYH-6</option>
+<option value="1">ZOOM iQ6</option>
+<option value="2">TASCAM DR-22WL</option>
+<option value="9" selected>Select device</option>
+</select>
+<input type="button" id="set_btn" value="Set" style="font-size:20px" />
+</p>
+
+<p align="center">
+<input type="button" id="rec_btn" value="Record" style="font-size:20px" disabled/>
+<input type="button" id="play_btn" value="Playback" style="font-size:20px" disabled/></p>
+
+<div style="font-size:20px" align="center">
+<input type="button" id="pan_left" value=" <- " style="font-size:20px" />
+<input type="text" id="pan" style="text-align:center" value="Panning" readonly="readonly"/>
+<input type="button" id="pan_right" value=" -> " style="font-size:20px" />
+</div>
+
+<p style="font-size:20px" align="center">File name ->
+<input type="text" id="fname" value="" placeholder="sound.wav" style="font-size:20px; text-align:right" />
+<a id="save" style="font-size:20px" disabled>Save</a>
+<audio id="recorded" style="display:none" controls></audio></p>
+
+</form>
+<h2>README</h2>
+<p style="font-size:22px">In this sample page, '<b>PanoSterec.js</b>' is used as the AudioWorkletProcessor module.
+Follow the instructions below.</p>
+<ul style="font-size:20px" align="left">
+    <li>Select the recording device<a id="footnote-1-ref" href="#footnote-1">(See [footnote*])</a>
+        from the dropdown list and press '<b>Set</b>'</li>
+    <li>'<b>Record</b>' will be enabled</li>
+    <li>Press '<b>Record</b>' to start recording</li>
+    <li>When the recording starts, '<b>Stop</b>' will appear and be enabled</li>
+	<li>Listen to the sound through the stereo headphones</li>
+    <li>Control panning by '<b><-</b>' and '<b>-></b>' buttons</li>
+    <li>Press '<b>Stop</b>' to quit recording</li>
+    <li>The maximum recording time is 300 s</li>
+    <li>When the recording is done, '<b>Playback</b>' will be enabled</li>
+    <li>You can save (download) data to a stereo WAV file</li>
+</ul>
+<p id="footnote-1">[footnote*] To use either 'ZOOM iQ6' or 'TASCAM DR-22WL' as the recording device, 
+    you have to get the analog audio signal from the phone-out jack of the device and digitize it 
+    with a USB audio interface connected to your computer. 
+    To get the analog audio signal from the phone-out jack, 
+    the device has to be in the recording standby mode.<br>
+    If you are using 'ZOOM H6' as the recording device, it has to be connected to your PC
+    as the audio interface.
+</p>
+
+<div id="footer">
+<hr>
+<p style="text-align : right;" align="right">Copyright&copy; 2024 Doshisha Univ.</p>
+</div>
+
+<script>
+let AudioContext;
+let audioctx;
+let media;
+let worklet;
+let samplerate = 44100;
+let currSamples;
+let audioData;
+let audioBlob;
+let src;
+let horizontalAngle = 0;
+let setEem = document.getElementById('set_btn');
+let recElem = document.getElementById('rec_btn');
+let playElem = document.getElementById('play_btn');
+let selectElem = document.getElementById('device');
+let leftElem = document.getElementById('pan_left');
+let rightElem = document.getElementById('pan_right');
+let panElem = document.getElementById('pan');
+let audioElem = document.getElementById('recorded');
+let downloader = document.getElementById("save");
+let fileName = document.getElementById('fname');
+
+function unlockAudioContext(audioCtx) {
+    if (audioCtx.state !== 'suspended') return;
+    const b = document.body;
+    const events = ['touchstart', 'touchend', 'mousedown', 'keydown'];
+    events.forEach(e => b.addEventListener(e, unlock, false));
+    function unlock() { audioCtx.resume().then(clean); }
+    function clean() { events.forEach(e => b.removeEventListener(e, unlock)); }
+}
+
+async function setupAudio(device){
+	try {
+		AudioContext = window.AudioContext || window.webkitAudioContext;
+		audioctx = new AudioContext({sampleRate: samplerate});
+		unlockAudioContext(audioctx);
+    }
+    catch (e) {
+        alert("Web Audio API is not supported in this browser");
+        return (false);
+    }
+	if(!audioctx.audioWorklet){
+		alert("Your browser does not support AudioWorklet!");
+        return (false);
+    }
+
+	await audioctx.audioWorklet.addModule('PanoSterec.min.js').then(()=>{
+	    worklet = new (window.AudioWorkletNode || window.webkitAudioWorkletNode)(audioctx, 'PanoSterec');
+	    worklet.port.postMessage({"rate":samplerate, "device":device});
+	    worklet.port.onmessage = (event) =>{
+	        if(event.data.samples){
+	            currSamples = event.data.samples;
+	        }
+	        if(event.data.audio){
+	            audioData.push(event.data.audio);
+	        }
+	    };  
+	})
+	.catch(console.error);
+	recElem.disabled = false;
+}
+
+// When navigator.mediaDevices.getUserMedia returns SUCCESS
+let handleSuccess = function(stream){
+	media = audioctx.createMediaStreamSource(stream);
+	// Connect source and processor
+	media.connect(worklet);
+	worklet.connect(audioctx.destination);
+	
+	// Stop recording after 300,000 ms
+	timer = setTimeout(function () {
+		worklet.port.postMessage({"state":"played"});
+		// Disconnect
+		worklet.disconnect();
+		media.disconnect();
+		console.log("Time out");
+	}, 300000);
+
+};
+
+function record(){
+	if(selectElem.value == 9){
+		alert("Recording device not selected!");
+		return;
+	}
+
+	let dev = selectElem.value;
+	
+	if(recElem.value == "Record"){
+		audioData = [];
+		recElem.value = "Stop";
+		worklet.port.postMessage({"state":"run"});
+		let constraints = {
+            audio: {
+                mandatory: { echoCancellation: false, googEchoCancellation: false }, optional: []
+            }, video: false
+        };
+        // Get permission to use microphones
+        navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess);
+	}
+	else{
+		recElem.value = "Record";
+		worklet.port.postMessage({"state":"played"});
+        // Disconnect
+        worklet.disconnect();
+        media.disconnect();
+
+        clearTimeout(timer);
+
+		if(currSamples > 0){
+            // Export audio data to WAV
+            exportWAV(audioData, audioElem);
+            if(!src)
+                src = audioctx.createMediaElementSource(audioElem); 
+			
+			playElem.disabled = false;
+		}
+	}
+}
+
+setEem.addEventListener('click', function(){
+	setupAudio(selectElem.value)
+})
+
+recElem.addEventListener('click', record);
+
+audioElem.onended = function(){
+    playElem.value = "Playback";
+    worklet.port.postMessage({"state":"played"});
+    // Disconnect
+    worklet.disconnect();
+    src.disconnect();
+};
+
+playElem.addEventListener('click',function(){
+	if(playElem.value == "Playback"){
+		playElem.value = "Stop";
+        // Connect source and processor
+        src.connect(worklet);
+        worklet.connect(audioctx.destination);
+        audioElem.play();
+        worklet.port.postMessage({"state":"run"});
+	}
+	else{
+		playElem.value = "Playback";
+		audioElem.pause();
+        audioElem.currentTime = 0;
+        worklet.port.postMessage({"state":"played"});
+        // Disconnect
+        worklet.disconnect();
+        src.disconnect();
+	}
+})
+
+fileName.addEventListener('change',function(event){
+    if(fileName.value){
+        let str = fileName.value;
+        let ext;
+        if(str.lastIndexOf(".") == -1){
+            str += '.wav';
+            fileName.value = str;
+        }
+        else{
+            ext = str.substring(str.lastIndexOf("."));
+            if(ext != '.wav' && ext != '.WAV'){
+                str = str.substring(0,str.lastIndexOf(".")) + 'wav';
+                fileName.value = str;
+            }
+        }
+        downloader.download = fileName.value;
+    }
+    downloader.style.display = "";
+});
+
+leftElem.addEventListener('click', function(){
+	horizontalAngle += 10;
+	if(horizontalAngle == 190)
+		horizontalAngle = -170;
+	panElem.value = horizontalAngle + "";
+	if(worklet){
+        worklet.port.postMessage({'pan':horizontalAngle});
+    }
+})
+
+rightElem.addEventListener('click', function(){
+	horizontalAngle -= 10;
+	if(horizontalAngle == -180)
+		horizontalAngle = 180;
+	panElem.value = horizontalAngle + "";
+	if(worklet){
+        worklet.port.postMessage({'pan':horizontalAngle});
+    }
+})
+
+// Create WAV
+let exportWAV = function (Data, audio) {
+    let channels = 2;
+
+    let encodeWAV = function (samples, sampleRate) {
+        let buffer = new ArrayBuffer(44 + samples.length * 2);
+        let view = new DataView(buffer);
+
+        let writeString = function (view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        };
+
+        let floatTo16BitPCM = function (output, offset, input) {
+            for (let i = 0; i < input.length; i++, offset += 2) {
+                let s = Math.max(-1, Math.min(1, input[i]));
+                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+        };
+
+        writeString(view, 0, 'RIFF');  // RIFF header
+        view.setUint32(4, 32 + samples.length * 2, true); // File size
+        writeString(view, 8, 'WAVE'); // WAVE
+        writeString(view, 12, 'fmt '); // fmt
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); // Linear PCM
+        view.setUint16(22, channels, true); // Channels
+        view.setUint32(24, sampleRate, true); // Sample rate
+        view.setUint32(28, sampleRate * 2 * channels, true); // Byte rate
+        view.setUint16(32, 2 * channels, true); // Block size
+        view.setUint16(34, 16, true); // Bit depth
+        writeString(view, 36, 'data'); // data
+        view.setUint32(40, samples.length * 2, true); // Size in byte
+        floatTo16BitPCM(view, 44, samples); // Data
+
+        return view;
+    };
+
+    let mergeBuffers = function (audio) {
+        let sampleLength = 0;
+        for (let i = 0; i < audio.length; i++) {
+            sampleLength += audio[i].length;
+        }
+        let samples = new Float32Array(sampleLength);
+        let sampleIdx = 0;
+        for (let i = 0; i < audio.length; i++) {
+            for (let j = 0; j < audio[i].length; j++) {
+                samples[sampleIdx] = audio[i][j];
+                sampleIdx++;
+            }
+        }
+        return samples;
+    };
+
+    let dataview = encodeWAV(mergeBuffers(Data), samplerate);
+    // WAV to Blob
+    audioBlob = new Blob([dataview], { type: 'audio/wav' });
+    // Create URL form Blob
+	if(fileName.value == "")
+		downloader.download = "sound.wav";
+    downloader.href = URL.createObjectURL(audioBlob);
+	downloader.disabled = false;
+
+    // Link blob and audio
+    audio.src = URL.createObjectURL(audioBlob);
+};
+
+
+</script>
+</body>
+</html>

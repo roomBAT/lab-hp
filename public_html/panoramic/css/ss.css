@@ -1,0 +1,36 @@
+body{
+  font-family: "a?Åfa?ca?Ra??eÅòÅfa?ÅL Pro W3", "Hiragino Kaku Gothic Pro", "?E-?E3 ?EÅãa?ÅLa?ÅEa??E?ÅP", "MS PGothic", Courier New;
+  font-family: "Times New Roman,Arial";
+  font-size: 32px;
+  text-align:center;
+  padding: 0;
+  margin: 0;
+}
+
+#wrapper {
+  text-align: left;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+#header {
+  text-align:center;
+  margin: 0;
+  padding: 0;
+}
+
+#contents {
+  width: 96%;
+  float: left;
+  font-family: "MS PGothic","Times New Roman","Arial","sans-serif";
+  font-size: 100%;
+  margin: 4%;
+  padding: 0;
+}
+
+#stage{
+  width: 100%;
+  float: center;
+  padding: 0;
+}
