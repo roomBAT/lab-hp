@@ -599,7 +599,15 @@ let TristerScrProc = (function(){
         if (!event.alpha && !event.gamma && !event.beta)
             alert("deviceorientation not available");
         else if (isDevInit) {
-            offsetAlpha = event.alpha * Math.PI / 180;
+            if(event.alpha >= 180){
+                offsetAlpha = (event.alpha - 360) * Math.PI / 180
+            }
+            else if(event.alpha < -180){
+                offsetAlpha = (event.alpha + 360) * Math.PI / 180
+            }
+            else{
+                offsetAlpha = event.alpha * Math.PI / 180;
+            }
             offsetGamma = event.gamma * Math.PI / 180;
             offsetBeta = event.beta * Math.PI / 180;
             isDevInit = false;
@@ -761,7 +769,33 @@ let TristerScrProc = (function(){
             gcontrols.update();
             sphere.rotateY(-camera.rotation.y);
             if (isIphone || isIpad) {
-                if (window.orientation == -90) {
+                if (screen && screen.orientation && screen.orientation.angle) {
+                    let orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+
+                    if(orientation.angle == 270){
+                        screen.orientation.lock('landscape-primary')
+                        .then(() =>{
+                            isRight = true;
+                        });
+                    }
+                    else if(orientation.angle == 180){
+                        screen.orientation.lock('portrait-secondary')
+                        .then(() =>{
+                            isDown = true;
+                            sphere.rotateY(Math.PI);
+                        });
+                        alert("Device orientation not supported!\nChange the device orientation and try again.");
+                    }
+                    else if(orientation.angle == 0){
+                        screen.orientation.lock('portrait-primary')
+                        .then(() =>{
+                            sphere.rotateY(Math.PI);
+                            isUp = true;
+                        });
+                    }
+
+                }
+                else if (window.orientation == -90) {
                     isRight = true;
                     //	                    alert("Wrong orientation!");
                     //	                    sphere.rotateY(Math.PI);
@@ -779,20 +813,27 @@ let TristerScrProc = (function(){
             else {
                 var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
                 if (orientation.type == 'landscape-secondary') {
-                    //	                    screen.lockOrientation('landscape-secondary');
-                    isRight = true;
+                    screen.orientation.lock('landscape-secondary')
+                    .then(() =>{
+                        isRight = true;
+                    });
                     //	                    sphere.rotateY(Math.PI);
                 }
                 else if (orientation.type == 'portrait-secondary') {
-                    //	                    screen.lockOrientation('portrait-secondary');
-                    isDown = true;
-                    sphere.rotateY(rightAngle);
+                    screen.orientation.lock('portrait-secondary')
+                    .then(() =>{
+                        isDown = true;
+                        sphere.rotateY(rightAngle);
+                    });
+                    //	                    sphere.rotateY(Math.PI);
                     //	                    alert("Upside down");
                 }
                 else if (orientation.type == 'portrait-primary') {
-                    //	                    screen.lockOrientation('portrait-primary');
-                    sphere.rotateY(-rightAngle);
-                    isUp = true;
+                    screen.orientation.lock('portrait-primary')
+                    .then(() =>{
+                        sphere.rotateY(-rightAngle);
+                        isUp = true;
+                    });
                 }
             }
         }
@@ -943,7 +984,7 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x += offsetGamma;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else if (isDown) {
                 if (isIphone || isIpad)
@@ -953,7 +994,7 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x -= offsetBeta;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else if (isUp) {
                 if(isIphone || isIpad)
@@ -963,14 +1004,14 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x += offsetBeta;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else {
                 alpha = camera.rotation.y - rightAngle;
                 if(mode == 0)
 					camera.rotation.x -= offsetGamma;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             if(mode == 0){
                 if (camera.rotation.x > lim)
@@ -1079,12 +1120,12 @@ let TristerScrProc = (function(){
 
             /* Roll control */
             else if(mode == 1){
-                if(camera.rotation.z <= Math.PI * 2 / 5 && camera.rotation.z >= -Math.PI * 2 / 5)
+                if(camera.rotation.z <= limRoll && camera.rotation.z >= -limRoll)
                     camera.rotation.z -= mPosition.z * motionRate * 2;
-                else if(camera.rotation.z > Math.PI * 2 / 5)
-                    camera.rotation.z = Math.PI * 2 / 5;
+                else if(camera.rotation.z > limRoll)
+                    camera.rotation.z = limRoll;
                 else
-                    camera.rotation.z = - Math.PI * 2 / 5;
+                    camera.rotation.z = -limRoll;
             }
             /****************/
 
