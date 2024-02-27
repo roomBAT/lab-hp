@@ -769,7 +769,33 @@ let TristerScrProc = (function(){
             gcontrols.update();
             sphere.rotateY(-camera.rotation.y);
             if (isIphone || isIpad) {
-                if (window.orientation == -90) {
+                if (screen && screen.orientation && screen.orientation.angle) {
+                    let orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+
+                    if(orientation.angle == 270){
+                        screen.orientation.lock('landscape-primary')
+                        .then(() =>{
+                            isRight = true;
+                        });
+                    }
+                    else if(orientation.angle == 180){
+                        screen.orientation.lock('portrait-secondary')
+                        .then(() =>{
+                            isDown = true;
+                            sphere.rotateY(Math.PI);
+                        });
+                        alert("Device orientation not supported!\nChange the device orientation and try again.");
+                    }
+                    else if(orientation.angle == 0){
+                        screen.orientation.lock('portrait-primary')
+                        .then(() =>{
+                            sphere.rotateY(Math.PI);
+                            isUp = true;
+                        });
+                    }
+
+                }
+                else if (window.orientation == -90) {
                     isRight = true;
                     //	                    alert("Wrong orientation!");
                     //	                    sphere.rotateY(Math.PI);
@@ -787,20 +813,27 @@ let TristerScrProc = (function(){
             else {
                 var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
                 if (orientation.type == 'landscape-secondary') {
-                    //	                    screen.lockOrientation('landscape-secondary');
-                    isRight = true;
+                    screen.orientation.lock('landscape-secondary')
+                    .then(() =>{
+                        isRight = true;
+                    });
                     //	                    sphere.rotateY(Math.PI);
                 }
                 else if (orientation.type == 'portrait-secondary') {
-                    //	                    screen.lockOrientation('portrait-secondary');
-                    isDown = true;
-                    sphere.rotateY(rightAngle);
+                    screen.orientation.lock('portrait-secondary')
+                    .then(() =>{
+                        isDown = true;
+                        sphere.rotateY(rightAngle);
+                    });
+                    //	                    sphere.rotateY(Math.PI);
                     //	                    alert("Upside down");
                 }
                 else if (orientation.type == 'portrait-primary') {
-                    //	                    screen.lockOrientation('portrait-primary');
-                    sphere.rotateY(-rightAngle);
-                    isUp = true;
+                    screen.orientation.lock('portrait-primary')
+                    .then(() =>{
+                        sphere.rotateY(-rightAngle);
+                        isUp = true;
+                    });
                 }
             }
         }
