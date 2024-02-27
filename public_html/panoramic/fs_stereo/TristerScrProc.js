@@ -132,7 +132,7 @@ let TristerScrProc = (function(){
             let vars = n.split('&');
             for (let i = 0; i < vars.length; i++){
                 let pair = vars[i].split('=');
-                if (decodeURIComponent(pair[0]) == "wav") {
+                if (decodeURIComponent(pair[0]) == "wav" || decodeURIComponent(pair[0]) == "WAV") {
                     audioElem.src = decodeURIComponent(pair[1]);
                     document.form0.elements["wav"].value = decodeURIComponent(pair[1]);
                 }
