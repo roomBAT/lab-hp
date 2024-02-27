@@ -132,7 +132,7 @@ let TristerScrProc = (function(){
             let vars = n.split('&');
             for (let i = 0; i < vars.length; i++){
                 let pair = vars[i].split('=');
-                if (decodeURIComponent(pair[0]) == "wav" || decodeURIComponent(pair[0]) == "WAV") {
+                if (decodeURIComponent(pair[0]) == "wav") {
                     audioElem.src = decodeURIComponent(pair[1]);
                     document.form0.elements["wav"].value = decodeURIComponent(pair[1]);
                 }
@@ -599,7 +599,15 @@ let TristerScrProc = (function(){
         if (!event.alpha && !event.gamma && !event.beta)
             alert("deviceorientation not available");
         else if (isDevInit) {
-            offsetAlpha = event.alpha * Math.PI / 180;
+            if(event.alpha >= 180){
+                offsetAlpha = (event.alpha - 360) * Math.PI / 180
+            }
+            else if(event.alpha < -180){
+                offsetAlpha = (event.alpha + 360) * Math.PI / 180
+            }
+            else{
+                offsetAlpha = event.alpha * Math.PI / 180;
+            }
             offsetGamma = event.gamma * Math.PI / 180;
             offsetBeta = event.beta * Math.PI / 180;
             isDevInit = false;
@@ -943,7 +951,7 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x += offsetGamma;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else if (isDown) {
                 if (isIphone || isIpad)
@@ -953,7 +961,7 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x -= offsetBeta;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else if (isUp) {
                 if(isIphone || isIpad)
@@ -963,14 +971,14 @@ let TristerScrProc = (function(){
                 if(mode == 0)
 					camera.rotation.x += offsetBeta;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             else {
                 alpha = camera.rotation.y - rightAngle;
                 if(mode == 0)
 					camera.rotation.x -= offsetGamma;
                 else if(mode == 1)
-                    camera.ratation.z += offsetAlpha;
+                    camera.rotation.z += offsetAlpha;
             }
             if(mode == 0){
                 if (camera.rotation.x > lim)
@@ -1079,12 +1087,12 @@ let TristerScrProc = (function(){
 
             /* Roll control */
             else if(mode == 1){
-                if(camera.rotation.z <= Math.PI * 2 / 5 && camera.rotation.z >= -Math.PI * 2 / 5)
+                if(camera.rotation.z <= limRoll && camera.rotation.z >= -limRoll)
                     camera.rotation.z -= mPosition.z * motionRate * 2;
-                else if(camera.rotation.z > Math.PI * 2 / 5)
-                    camera.rotation.z = Math.PI * 2 / 5;
+                else if(camera.rotation.z > limRoll)
+                    camera.rotation.z = limRoll;
                 else
-                    camera.rotation.z = - Math.PI * 2 / 5;
+                    camera.rotation.z = -limRoll;
             }
             /****************/
 
