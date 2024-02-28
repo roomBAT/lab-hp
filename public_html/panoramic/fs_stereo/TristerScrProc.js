@@ -132,7 +132,7 @@ let TristerScrProc = (function(){
             let vars = n.split('&');
             for (let i = 0; i < vars.length; i++){
                 let pair = vars[i].split('=');
-                if (decodeURIComponent(pair[0]) == "wav" || decodeURIComponent(pair[0]) == "WAV") {
+                if (decodeURIComponent(pair[0]) == "wav") {
                     audioElem.src = decodeURIComponent(pair[1]);
                     document.form0.elements["wav"].value = decodeURIComponent(pair[1]);
                 }
@@ -1104,6 +1104,9 @@ let TristerScrProc = (function(){
                 camera.rotation.z = 0;
             else if(mode == 1)
                 camera.rotation.x = 0;
+            else{
+                camera.rotation.x = camera.rotation.z = 0;
+            }
         }
         else{
             camera.rotation.y -= mPosition.x * motionRate;
@@ -1170,7 +1173,7 @@ let TristerScrProc = (function(){
         }
         /*********/
         /* Roll */
-        else{
+        else if(mode == 1){
             if (Math.abs(rollAngle - parseInt(roll)) > 3) {
                 rollAngle = parseInt(roll);
                 workletNode.port.postMessage({'roll':rollAngle});
