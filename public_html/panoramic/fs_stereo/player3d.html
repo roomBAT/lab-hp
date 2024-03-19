@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/ss.css" />
+	<link rel="icon" type="image/vnd.microsoft.icon" href="ashi.ico">
+    <title>3-D panoramic Viewer</title>
+</head>
+
+<body background="../images/y8b.gif">
+	<div id="wrapper">
+	<div id="header">
+    <p align="center" style="font-size : 40%;"><font face="Berlin Sans FB"
+ 	color="#008080">Stereo Spatial Sound Player</font></p>
+	</div>
+	<div id="stage" align="center"></div>
+	<div id="controller" align="center"></div>
+	<div id="myUrl" style="display:none"></div>
+	<div id="imgUrl" style="display:none"></div>
+	<div id="pan" style="display:none">0</div>
+
+	<p align="right" style="font-size : 60%;">Copyright&copy; 2023 AIST</p>
+	</div>
+    <script src="../js/three.min.js"></script>
+	<script src="../js/Detector.js"></script>
+	<script src="../js/OrbitControls.js"></script>
+	<script src="../js/DeviceOrientationControls.js"></script>
+	<script src="TristerScrProc.js"></script>
+
+	<form name="form0" action="#">
+    <input type="text" name="wav" size="50" style="display:none"/>
+    <input type="text" name="image" size="50" style="display:none"/>
+	<input type="number" name="device" style="display:none"/>
+	</form>
+</body>
+</html>

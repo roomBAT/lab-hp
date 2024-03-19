@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/ss.css" />
+    <title>2-D panoramic recorder</title>
+</head>
+
+<body background="../images/y8b.gif">
+	<div id="wrapper">
+	<div id="header">
+    <a id="info" style="font-size:20px; text-align:center"><font face="Berlin Sans FB"
+ 	color="#008080">2-D Panoramic Sound Recorder</font></a>
+	</div>
+	<div id="stage" align="center">
+	<p style="font-size:20px">**<span id="control" style="display:none">
+    <input type="button" name="btn" value="Playback" style="font-size:20px" disabled/>
+	File name ->
+	<input type="text" id="fname" value="" placeholder="sound.wav" style="font-size:20px; text-align:right" />
+	<a id="save" style="font-size:20px" disabled>Save</a>
+	<audio id="recorded" style="display:none" controls></audio></span>**</p>
+	</div>
+	<div id="controller" align="center"></div>
+	<div id="imgUrl" style="display:none"></div>
+	<div id="pan" style="display:none">0</div>
+
+	<p align="right" style="font-size : 60%;">Copyright&copy; 2022 AIST</p>
+	</div>
+    <script src="../js/three.min.js"></script>
+	<script src="../js/Detector.js"></script>
+	<script src="../js/OrbitControls.js"></script>
+	<script src="../js/DeviceOrientationControls.js"></script>
+	<script src="dualmic.js"></script>
+
+	<form name="form0">Image file
+	<input type="file" multiple id="file" />
+    <input type="text" name="image" size="50" style="display:none"/>
+	<input type="number" name="device" style="display:none"/>
+	</form>
+</body>
+</html>
